@@ -1,0 +1,10 @@
+﻿  ConsoleApplication4.cpp
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(236,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(236,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(239,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(239,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(250,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(250,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(253,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\ConsoleApplication4\ConsoleApplication4.cpp(253,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  ConsoleApplication4.vcxproj -> C:\Users\HP\Desktop\ConsoleApplication4\x64\Debug\ConsoleApplication4.exe
