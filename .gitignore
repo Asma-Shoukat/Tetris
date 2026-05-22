@@ -1,0 +1,34 @@
+# Visual Studio / C++ GitIgnore
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Build and Output Directories
+x64/
+x86/
+ARM/
+ARM64/
+Debug/
+Release/
+bin/
+obj/
+
+# Compiler/Linker Outputs and Logs
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.recipe
+*.ipch
+*.log
+*.db
+highscore.txt
+
+# Executables and Libraries
+*.exe
+*.dll
+*.lib
