@@ -28,7 +28,64 @@
 | Start Screen | Active Gameplay | Next & Hold Sidebar |
 |---|---|---|
 | <img width="250" src="https://github.com/user-attachments/assets/e6c21bb9-b73d-46bd-a7ba-d138f306bc7c"/> | <img width="250" src="https://github.com/user-attachments/assets/ed1d71f3-c2c8-4864-8602-3b0cd4669381"/> | <img width="250" src="https://github.com/user-attachments/assets/ec3af235-7950-4808-8b91-51aa69a6e4e1"/> |
-| Vibrant neon title screen with animated background. | Modern gameplay interface with ghost piece preview. | Hold slot, next-piece preview, and gameplay stats HUD. |
+| Vibrant neon title screen with animated background. | Modern gameplay interface with ghost piece preview. | Hold slot, next-piece preview, and gameplay stats HUD. | 
+
+## ✨ Advanced Features
+
+* **Modern Object-Oriented C++ Architecture**
+* **Ambient Background Animations**
+* **Pulsing Neon Title Screen**
+* **Hold Piece System**
+* **Next Piece Preview**
+* **Hard Drop Mechanic**
+* **Ghost Piece Shadow**
+* **Dynamic Level Progression**
+* **Loop Soundtrack (SFML Audio)**
+
+---
+
+## 🕹️ Controls Guide
+
+| Key | Action |
+|---|---|
+| ← → | Move piece |
+| ↑ | Rotate |
+| ↓ | Soft drop |
+| Space | Hard drop |
+| C / LShift | Hold piece |
+| P / Esc | Pause |
+
+---
+
+## 🏗️ Architecture Design Pattern
+
+```
+Game Entry
+   ↓
+Game Engine
+   ↓
+Playfield + Tetromino + Audio (SoundManager)
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+* Visual Studio 2022  
+* SFML 2.6.2  
+* Windows 10/11  
+
+### Build & Run
+1. Open `.sln`
+2. Set x64 Debug/Release
+3. Press F5
+
+---
+
+## 👩‍💻 Developer
+
+**Asma Shoukat**
 
 </div>
 
