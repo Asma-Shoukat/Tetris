@@ -120,12 +120,21 @@ void Board::draw(sf::RenderWindow& window) const {
         }
     }
 
-    // 4. Draw Thick outer border around the board
-    sf::RectangleShape outerBorder(sf::Vector2f(GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE));
-    outerBorder.setFillColor(sf::Color::Transparent);
-    outerBorder.setOutlineThickness(3.f);
-    outerBorder.setOutlineColor(sf::Color(100, 100, 150, 150)); // Semi-transparent blue-grey border
-    window.draw(outerBorder);
+    // 4. Draw Thick outer border around the board (Neon Pink outer outline & Neon Cyan inner outline)
+    // Outer border (Neon pink/magenta glow, slightly offset outwards)
+    sf::RectangleShape outerGlow(sf::Vector2f(GRID_WIDTH * TILE_SIZE + 4.f, GRID_HEIGHT * TILE_SIZE + 4.f));
+    outerGlow.setPosition(-2.f, -2.f);
+    outerGlow.setFillColor(sf::Color::Transparent);
+    outerGlow.setOutlineThickness(3.f);
+    outerGlow.setOutlineColor(sf::Color(255, 0, 128, 120)); // Glowing pink with mid transparency
+    window.draw(outerGlow);
+
+    // Inner border (Neon cyan/blue border, matching the grid bounding box exactly)
+    sf::RectangleShape innerBorder(sf::Vector2f(GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE));
+    innerBorder.setFillColor(sf::Color::Transparent);
+    innerBorder.setOutlineThickness(2.f);
+    innerBorder.setOutlineColor(sf::Color(0, 222, 222, 220)); // Neon cyan border
+    window.draw(innerBorder);
 }
 
 void Board::loadHighScore() {

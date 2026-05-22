@@ -318,17 +318,43 @@ void Game::drawActivePiece() {
     if (type == PieceType::None) return;
 
     int colorIdx = static_cast<int>(type);
+    sf::Color pieceColor = SHAPE_COLORS[colorIdx];
 
-    sf::RectangleShape tile(sf::Vector2f(TILE_SIZE - 1.f, TILE_SIZE - 1.f));
+    // --- NEW: Draw Column Laser Guidelines (matching reference screenshot) ---
+    bool columnDrawn[GRID_WIDTH] = { false };
+    float pulse = (1.f + std::sin(m_pulseTimer * 5.f)) / 2.f;
+    for (int i = 0; i < 4; i++) {
+        int col = blocks[i].x;
+        if (col >= 0 && col < GRID_WIDTH && !columnDrawn[col]) {
+            columnDrawn[col] = true;
+            
+            // Faint full-column light highlight
+            sf::RectangleShape stripe(sf::Vector2f(TILE_SIZE, GRID_HEIGHT * TILE_SIZE));
+            stripe.setPosition(col * TILE_SIZE, 0.f);
+            stripe.setFillColor(sf::Color(pieceColor.r, pieceColor.g, pieceColor.b, static_cast<sf::Uint8>(6 + pulse * 6)));
+            m_window.draw(stripe);
+
+            // Dotted glowing laser beam down the center of the column
+            for (int y = 0; y < GRID_HEIGHT * TILE_SIZE; y += 12) {
+                sf::RectangleShape dot(sf::Vector2f(2.f, 6.f));
+                dot.setPosition(col * TILE_SIZE + TILE_SIZE / 2.f - 1.f, static_cast<float>(y));
+                dot.setFillColor(sf::Color(pieceColor.r, pieceColor.g, pieceColor.b, static_cast<sf::Uint8>(50 + pulse * 50)));
+                m_window.draw(dot);
+            }
+        }
+    }
+
+    // Draw active piece tiles with bright outline matching pieceColor
+    sf::RectangleShape tile(sf::Vector2f(TILE_SIZE - 2.f, TILE_SIZE - 2.f));
     sf::RectangleShape border(sf::Vector2f(TILE_SIZE, TILE_SIZE));
-    border.setOutlineThickness(1.f);
-    border.setOutlineColor(sf::Color(0, 0, 0, 200));
+    border.setOutlineThickness(1.5f);
+    border.setOutlineColor(sf::Color(pieceColor.r, pieceColor.g, pieceColor.b, 255)); // Vivid neon border
     border.setFillColor(sf::Color::Transparent);
 
     for (int i = 0; i < 4; i++) {
         if (blocks[i].y >= 0) {
-            tile.setPosition(blocks[i].x * TILE_SIZE, blocks[i].y * TILE_SIZE);
-            tile.setFillColor(SHAPE_COLORS[colorIdx]);
+            tile.setPosition(blocks[i].x * TILE_SIZE + 1.f, blocks[i].y * TILE_SIZE + 1.f);
+            tile.setFillColor(pieceColor);
 
             border.setPosition(blocks[i].x * TILE_SIZE, blocks[i].y * TILE_SIZE);
 
@@ -367,11 +393,22 @@ void Game::drawGhostPiece() {
 void Game::drawSidebar() {
     int startX = GRID_WIDTH * TILE_SIZE + 15;
 
-    // Draw Title
+    // Local score formatting lambda
+    auto formatWithCommas = [](int value) -> std::string {
+        std::string numStr = std::to_string(value);
+        int insertPosition = numStr.length() - 3;
+        while (insertPosition > 0) {
+            numStr.insert(insertPosition, ",");
+            insertPosition -= 3;
+        }
+        return numStr;
+    };
+
+    // Draw Title (Neon Blue-Cyan with breathing glow)
     sf::Text titleText;
     titleText.setFont(m_font);
     titleText.setCharacterSize(22);
-    titleText.setFillColor(sf::Color(200, 200, 255));
+    titleText.setFillColor(sf::Color(0, 222, 222));
     titleText.setStyle(sf::Text::Bold);
     titleText.setString("TETRIS");
     titleText.setPosition(startX + 45, 10);
@@ -392,22 +429,65 @@ void Game::drawSidebar() {
     // 3. STATS PANEL
     drawSidebarPanel("STATISTICS", startX, 285, 190, 150);
 
-    sf::Text statsText;
-    statsText.setFont(m_font);
-    statsText.setCharacterSize(14);
-    statsText.setFillColor(sf::Color::White);
-    
-    std::ostringstream statsOss;
-    statsOss << "SCORE\n" 
-             << "  " << m_board.getScore() << "\n\n"
-             << "HIGH SCORE\n"
-             << "  " << m_board.getHighScore() << "\n\n"
-             << "LEVEL        " << m_board.getLevel() << "\n"
-             << "LINES        " << m_board.getLinesCleared();
-    
-    statsText.setString(statsOss.str());
-    statsText.setPosition(startX + 15, 285 + 25);
-    m_window.draw(statsText);
+    // Title: SCORE
+    sf::Text tScore;
+    tScore.setFont(m_font);
+    tScore.setCharacterSize(11);
+    tScore.setFillColor(sf::Color(180, 180, 200));
+    tScore.setString("SCORE");
+    tScore.setStyle(sf::Text::Bold);
+    tScore.setPosition(startX + 20, 285 + 25);
+    m_window.draw(tScore);
+
+    // Value: SCORE
+    sf::Text vScore;
+    vScore.setFont(m_font);
+    vScore.setCharacterSize(14);
+    vScore.setFillColor(sf::Color(255, 215, 0)); // Neon Gold
+    vScore.setString(formatWithCommas(m_board.getScore()));
+    vScore.setStyle(sf::Text::Bold);
+    vScore.setPosition(startX + 25, 285 + 42);
+    m_window.draw(vScore);
+
+    // Title: LEVEL
+    sf::Text tLevel;
+    tLevel.setFont(m_font);
+    tLevel.setCharacterSize(11);
+    tLevel.setFillColor(sf::Color(180, 180, 200));
+    tLevel.setString("LEVEL");
+    tLevel.setStyle(sf::Text::Bold);
+    tLevel.setPosition(startX + 20, 285 + 68);
+    m_window.draw(tLevel);
+
+    // Value: LEVEL (* Level *)
+    sf::Text vLevel;
+    vLevel.setFont(m_font);
+    vLevel.setCharacterSize(13);
+    vLevel.setFillColor(sf::Color(0, 222, 222)); // Neon Cyan
+    vLevel.setString("*  " + std::to_string(m_board.getLevel()) + "  *");
+    vLevel.setStyle(sf::Text::Bold);
+    vLevel.setPosition(startX + 25, 285 + 85);
+    m_window.draw(vLevel);
+
+    // Title: LINES
+    sf::Text tLines;
+    tLines.setFont(m_font);
+    tLines.setCharacterSize(11);
+    tLines.setFillColor(sf::Color(180, 180, 200));
+    tLines.setString("LINES");
+    tLines.setStyle(sf::Text::Bold);
+    tLines.setPosition(startX + 20, 285 + 110);
+    m_window.draw(tLines);
+
+    // Value: LINES (= Lines =)
+    sf::Text vLines;
+    vLines.setFont(m_font);
+    vLines.setCharacterSize(13);
+    vLines.setFillColor(sf::Color(50, 255, 50)); // Neon Green
+    vLines.setString("=  " + std::to_string(m_board.getLinesCleared()) + "  =");
+    vLines.setStyle(sf::Text::Bold);
+    vLines.setPosition(startX + 25, 285 + 125);
+    m_window.draw(vLines);
 
     // 4. CONTROLS PANEL
     drawSidebarPanel("CONTROLS", startX, 445, 190, 140);
@@ -431,22 +511,65 @@ void Game::drawSidebar() {
 }
 
 void Game::drawSidebarPanel(const std::string& title, int x, int y, int width, int height) {
-    // Glassmorphic panel background
+    // Select border color based on panel type
+    sf::Color borderColor(80, 80, 120, 120); // Default
+    sf::Color titleColor(180, 180, 250);
+    
+    if (title == "NEXT PIECE") {
+        borderColor = sf::Color(0, 222, 222);       // Neon Cyan
+        titleColor = sf::Color(0, 222, 222);
+    } else if (title == "HOLD SLOT") {
+        borderColor = sf::Color(255, 50, 50);       // Neon Red
+        titleColor = sf::Color(255, 50, 50);
+    } else if (title == "STATISTICS") {
+        borderColor = sf::Color(255, 215, 0);       // Neon Gold
+        titleColor = sf::Color(255, 215, 0);
+    } else if (title == "CONTROLS") {
+        borderColor = sf::Color(120, 80, 255);      // Neon Purple
+        titleColor = sf::Color(120, 80, 255);
+    }
+
+    // Outer glow outline (thick, transparent)
+    sf::RectangleShape outerGlow(sf::Vector2f(width + 4.f, height + 4.f));
+    outerGlow.setPosition(x - 2.f, y - 2.f);
+    outerGlow.setFillColor(sf::Color::Transparent);
+    outerGlow.setOutlineThickness(2.f);
+    outerGlow.setOutlineColor(sf::Color(borderColor.r, borderColor.g, borderColor.b, 60)); // Transparent glow
+    m_window.draw(outerGlow);
+
+    // Inner panel background
     sf::RectangleShape panelBg(sf::Vector2f(width, height));
     panelBg.setPosition(x, y);
-    panelBg.setFillColor(sf::Color(25, 25, 45, 180)); // Sleek semi-transparent dark blue-purple
-    panelBg.setOutlineThickness(1.f);
-    panelBg.setOutlineColor(sf::Color(80, 80, 120, 120)); // Thin neon blue-grey border
+    panelBg.setFillColor(sf::Color(12, 10, 20, 230)); // Deeper premium dark slate
+    panelBg.setOutlineThickness(1.5f);
+    panelBg.setOutlineColor(sf::Color(borderColor.r, borderColor.g, borderColor.b, 200)); // Vivid sharp border
     m_window.draw(panelBg);
 
-    // Panel title
+    // Inner thin bezel border
+    sf::RectangleShape innerBezel(sf::Vector2f(width - 8.f, height - 8.f));
+    innerBezel.setPosition(x + 4.f, y + 4.f);
+    innerBezel.setFillColor(sf::Color::Transparent);
+    innerBezel.setOutlineThickness(0.5f);
+    innerBezel.setOutlineColor(sf::Color(borderColor.r, borderColor.g, borderColor.b, 50));
+    m_window.draw(innerBezel);
+
+    // Panel title with a subtle shadow
+    sf::Text shadowTitle;
+    shadowTitle.setFont(m_font);
+    shadowTitle.setCharacterSize(12);
+    shadowTitle.setFillColor(sf::Color(0, 0, 0, 200));
+    shadowTitle.setStyle(sf::Text::Bold);
+    shadowTitle.setString(title);
+    shadowTitle.setPosition(x + 13.f, y + 7.f);
+    m_window.draw(shadowTitle);
+
     sf::Text panelTitle;
     panelTitle.setFont(m_font);
     panelTitle.setCharacterSize(12);
-    panelTitle.setFillColor(sf::Color(140, 140, 220));
+    panelTitle.setFillColor(titleColor);
     panelTitle.setStyle(sf::Text::Bold);
     panelTitle.setString(title);
-    panelTitle.setPosition(x + 12, y + 6);
+    panelTitle.setPosition(x + 12.f, y + 6.f);
     m_window.draw(panelTitle);
 }
 
@@ -669,19 +792,110 @@ void Game::drawStartScreen() {
     subtitle.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + 50.f);
     m_window.draw(subtitle);
 
-    // Dynamic Pulsing play prompt
+    // 3. Draw Pulsing Container Box around Play Prompt (matching the first reference screenshot)
     sf::Text prompt;
     prompt.setFont(m_font);
-    prompt.setCharacterSize(14);
-    
+    prompt.setCharacterSize(13);
     float alpha = 127.f + 127.f * std::sin(m_pulseTimer * 4.f);
-    prompt.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
+    prompt.setFillColor(sf::Color(0, 255, 255, static_cast<sf::Uint8>(alpha))); // Neon cyan text
     prompt.setString("PRESS ANY KEY TO START");
+    prompt.setStyle(sf::Text::Bold);
     
     sf::FloatRect promptBounds = prompt.getLocalBounds();
+    float boxW = promptBounds.width + 40.f;
+    float boxH = promptBounds.height + 22.f;
+    
+    // Outer glowing border
+    sf::RectangleShape promptBoxGlow(sf::Vector2f(boxW + 4.f, boxH + 4.f));
+    promptBoxGlow.setFillColor(sf::Color::Transparent);
+    promptBoxGlow.setOutlineThickness(2.f);
+    promptBoxGlow.setOutlineColor(sf::Color(0, 222, 222, static_cast<sf::Uint8>(alpha / 3)));
+    promptBoxGlow.setOrigin((boxW + 4.f) / 2.f, (boxH + 4.f) / 2.f);
+    promptBoxGlow.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT * 2.f / 3.f);
+    m_window.draw(promptBoxGlow);
+
+    // Inner filled box
+    sf::RectangleShape promptBox(sf::Vector2f(boxW, boxH));
+    promptBox.setFillColor(sf::Color(10, 8, 20, 220));
+    promptBox.setOutlineThickness(1.5f);
+    promptBox.setOutlineColor(sf::Color(0, 222, 222, static_cast<sf::Uint8>(alpha)));
+    promptBox.setOrigin(boxW / 2.f, boxH / 2.f);
+    promptBox.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT * 2.f / 3.f);
+    m_window.draw(promptBox);
+
     prompt.setOrigin(promptBounds.left + promptBounds.width / 2.0f, promptBounds.top + promptBounds.height / 2.0f);
     prompt.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT * 2.f / 3.f);
     m_window.draw(prompt);
+
+    // 4. Draw Retro Arcade Bezel Frame Overlay (matching reference screenshot)
+    // Outer bezel boundary (Neon Purple outline)
+    sf::RectangleShape outerBezel(sf::Vector2f(SCREEN_WIDTH - 16.f, SCREEN_HEIGHT - 16.f));
+    outerBezel.setPosition(8.f, 8.f);
+    outerBezel.setFillColor(sf::Color::Transparent);
+    outerBezel.setOutlineThickness(2.f);
+    outerBezel.setOutlineColor(sf::Color(120, 30, 200, 160)); // Vibrant Neon Purple
+    m_window.draw(outerBezel);
+
+    // Inner bezel boundary (Neon Cyan outline)
+    sf::RectangleShape innerBezel(sf::Vector2f(SCREEN_WIDTH - 28.f, SCREEN_HEIGHT - 28.f));
+    innerBezel.setPosition(14.f, 14.f);
+    innerBezel.setFillColor(sf::Color::Transparent);
+    innerBezel.setOutlineThickness(1.f);
+    innerBezel.setOutlineColor(sf::Color(0, 222, 222, 100)); // Glowing cyan
+    m_window.draw(innerBezel);
+
+    // Bezel Text Styling
+    sf::Text bezelText;
+    bezelText.setFont(m_font);
+    bezelText.setCharacterSize(9);
+    bezelText.setFillColor(sf::Color(140, 100, 180, 220)); // Soft purple bezel text
+
+    // Top Center: NEW WAVE GAMING
+    bezelText.setString("NEW WAVE GAMING");
+    bezelText.setStyle(sf::Text::Bold);
+    sf::FloatRect bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(bBounds.left + bBounds.width / 2.f, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(SCREEN_WIDTH / 2.f, 21.f);
+    m_window.draw(bezelText);
+
+    // Top Left: ARCADE CLASSIC
+    bezelText.setString("ARCADE CLASSIC");
+    bezelText.setStyle(sf::Text::Regular);
+    bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(0.f, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(25.f, 21.f);
+    m_window.draw(bezelText);
+
+    // Top Right: CYBER-GRID EDITION
+    bezelText.setString("CYBER-GRID EDITION");
+    bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(bBounds.width, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(SCREEN_WIDTH - 25.f, 21.f);
+    m_window.draw(bezelText);
+
+    // Bottom Center: CYBER-GRID EDITION
+    bezelText.setString("CYBER-GRID EDITION");
+    bezelText.setStyle(sf::Text::Bold);
+    bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(bBounds.left + bBounds.width / 2.f, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT - 21.f);
+    m_window.draw(bezelText);
+
+    // Left Margin (Vertical): ARCADE CLASSIC
+    bezelText.setString("ARCADE CLASSIC");
+    bezelText.setRotation(-90.f);
+    bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(bBounds.left + bBounds.width / 2.f, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(21.f, SCREEN_HEIGHT / 2.f);
+    m_window.draw(bezelText);
+
+    // Right Margin (Vertical): NEW WAVE GAMING
+    bezelText.setString("NEW WAVE GAMING");
+    bezelText.setRotation(90.f);
+    bBounds = bezelText.getLocalBounds();
+    bezelText.setOrigin(bBounds.left + bBounds.width / 2.f, bBounds.top + bBounds.height / 2.f);
+    bezelText.setPosition(SCREEN_WIDTH - 21.f, SCREEN_HEIGHT / 2.f);
+    m_window.draw(bezelText);
 }
 
 void Game::drawGameOverScreen() {
