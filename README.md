@@ -32,15 +32,15 @@
 
 ## ✨ Advanced Features
 
-* **Modern Object-Oriented C++ Architecture**
-* **Ambient Background Animations**
-* **Pulsing Neon Title Screen**
-* **Hold Piece System**
-* **Next Piece Preview**
-* **Hard Drop Mechanic**
-* **Ghost Piece Shadow**
-* **Dynamic Level Progression**
-* **Loop Soundtrack (SFML Audio)**
+ **Modern Object-Oriented C++ Architecture**
+ **Ambient Background Animations**
+ **Pulsing Neon Title Screen**
+ **Hold Piece System**
+ **Next Piece Preview**
+ **Hard Drop Mechanic**
+ **Ghost Piece Shadow**
+ **Dynamic Level Progression**
+ **Loop Soundtrack (SFML Audio)**
 
 ---
 
@@ -59,15 +59,11 @@
 
 ## 🏗️ Architecture Design Pattern
 
-```
 Game Entry
    ↓
 Game Engine
    ↓
 Playfield + Tetromino + Audio (SoundManager)
-```
-
----
 
 ## ⚙️ Getting Started
 
