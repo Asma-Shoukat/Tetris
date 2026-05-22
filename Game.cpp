@@ -685,48 +685,155 @@ void Game::drawStartScreen() {
 }
 
 void Game::drawGameOverScreen() {
-    // Low opacity red over the board
+    // 1. Sleek semi-transparent dark red death overlay
     sf::RectangleShape deathOverlay(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-    deathOverlay.setFillColor(sf::Color(30, 10, 10, 220));
+    deathOverlay.setFillColor(sf::Color(15, 2, 2, 235));
     m_window.draw(deathOverlay);
 
+    // 2. Neon Red Cyber Grid Overlay (Faded background)
+    sf::VertexArray gridLines(sf::Lines);
+    sf::Color gridColor(255, 30, 30, 20); // very faint red
+    // Draw vertical lines
+    for (int x = 0; x <= SCREEN_WIDTH; x += 30) {
+        gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x), 0.f), gridColor));
+        gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(SCREEN_HEIGHT)), gridColor));
+    }
+    // Draw horizontal lines
+    for (int y = 0; y <= SCREEN_HEIGHT; y += 30) {
+        gridLines.append(sf::Vertex(sf::Vector2f(0.f, static_cast<float>(y)), gridColor));
+        gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(SCREEN_WIDTH), static_cast<float>(y)), gridColor));
+    }
+    m_window.draw(gridLines);
+
+    // 3. GAME OVER Title with dual glow shadow (subtle scaling breathing effect)
+    float scale = 1.0f + 0.03f * std::sin(m_pulseTimer * 3.f);
+    
+    // Outer red glow
+    sf::Text glowText;
+    glowText.setFont(m_font);
+    glowText.setCharacterSize(42);
+    glowText.setFillColor(sf::Color(255, 0, 0, 100)); // semi-trans red glow
+    glowText.setStyle(sf::Text::Bold);
+    glowText.setString("GAME OVER");
+    glowText.setScale(scale, scale);
+    sf::FloatRect glowBounds = glowText.getLocalBounds();
+    glowText.setOrigin(glowBounds.left + glowBounds.width / 2.0f, glowBounds.top + glowBounds.height / 2.0f);
+    glowText.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 4.f);
+    m_window.draw(glowText);
+
+    // Foreground color-pulsing title (shifts crimson-red to neon pink)
     sf::Text goText;
     goText.setFont(m_font);
     goText.setCharacterSize(40);
-    goText.setFillColor(sf::Color(255, 60, 60));
+    float pulseVal = (1.f + std::sin(m_pulseTimer * 3.f)) / 2.f;
+    sf::Color pulsingRed(
+        static_cast<sf::Uint8>(255),
+        static_cast<sf::Uint8>(30 + pulseVal * 50),
+        static_cast<sf::Uint8>(30 + pulseVal * 100)
+    );
+    goText.setFillColor(pulsingRed);
     goText.setStyle(sf::Text::Bold);
     goText.setString("GAME OVER");
-    
+    goText.setScale(scale, scale);
     sf::FloatRect goBounds = goText.getLocalBounds();
     goText.setOrigin(goBounds.left + goBounds.width / 2.0f, goBounds.top + goBounds.height / 2.0f);
-    goText.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f);
+    goText.setPosition(SCREEN_WIDTH / 2.f - 2.f, SCREEN_HEIGHT / 4.f - 2.f);
+    m_window.draw(goText);
 
-    sf::Text statsText;
-    statsText.setFont(m_font);
-    statsText.setCharacterSize(18);
-    statsText.setFillColor(sf::Color::White);
+    // 4. Stylish Stats Box (Semi-transparent dark gray panel with glowing red border)
+    float boxW = 260.f;
+    float boxH = 150.f;
+    sf::RectangleShape statsBox(sf::Vector2f(boxW, boxH));
+    statsBox.setFillColor(sf::Color(25, 8, 8, 210));
+    statsBox.setOutlineColor(sf::Color(255, 50, 50, 180));
+    statsBox.setOutlineThickness(2.0f);
     
-    std::ostringstream ss;
-    ss << "Final Score: " << m_board.getScore() << "\n"
-       << "Level Reached: " << m_board.getLevel() << "\n"
-       << "Lines Cleared: " << m_board.getLinesCleared();
-    
-    statsText.setString(ss.str());
-    sf::FloatRect statsBounds = statsText.getLocalBounds();
-    statsText.setOrigin(statsBounds.left + statsBounds.width / 2.0f, statsBounds.top + statsBounds.height / 2.0f);
-    statsText.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f);
+    // Center the stats box
+    statsBox.setOrigin(boxW / 2.f, boxH / 2.f);
+    statsBox.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f);
+    m_window.draw(statsBox);
 
+    // 5. Draw Stats Inside the Box
+    // Title of stats section
+    sf::Text statsTitle;
+    statsTitle.setFont(m_font);
+    statsTitle.setCharacterSize(14);
+    statsTitle.setFillColor(sf::Color(200, 100, 100));
+    statsTitle.setString("--- CAMPAIGN STATS ---");
+    statsTitle.setStyle(sf::Text::Bold);
+    sf::FloatRect stBounds = statsTitle.getLocalBounds();
+    statsTitle.setOrigin(stBounds.left + stBounds.width / 2.0f, stBounds.top + stBounds.height / 2.0f);
+    statsTitle.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 20.f);
+    m_window.draw(statsTitle);
+
+    // Score Label & Value
+    sf::Text labelScore;
+    labelScore.setFont(m_font);
+    labelScore.setCharacterSize(14);
+    labelScore.setFillColor(sf::Color(180, 180, 180));
+    labelScore.setString("Score:");
+    labelScore.setPosition(SCREEN_WIDTH / 2.f - boxW / 2.f + 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 45.f);
+    m_window.draw(labelScore);
+
+    sf::Text valScore;
+    valScore.setFont(m_font);
+    valScore.setCharacterSize(14);
+    valScore.setFillColor(sf::Color(255, 215, 0)); // Neon Gold
+    valScore.setString(std::to_string(m_board.getScore()));
+    valScore.setStyle(sf::Text::Bold);
+    sf::FloatRect vsBounds = valScore.getLocalBounds();
+    valScore.setPosition(SCREEN_WIDTH / 2.f + boxW / 2.f - vsBounds.width - 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 45.f);
+    m_window.draw(valScore);
+
+    // Level Label & Value
+    sf::Text labelLevel;
+    labelLevel.setFont(m_font);
+    labelLevel.setCharacterSize(14);
+    labelLevel.setFillColor(sf::Color(180, 180, 180));
+    labelLevel.setString("Level:");
+    labelLevel.setPosition(SCREEN_WIDTH / 2.f - boxW / 2.f + 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 75.f);
+    m_window.draw(labelLevel);
+
+    sf::Text valLevel;
+    valLevel.setFont(m_font);
+    valLevel.setCharacterSize(14);
+    valLevel.setFillColor(sf::Color(0, 222, 222)); // Neon Cyan
+    valLevel.setString(std::to_string(m_board.getLevel()));
+    valLevel.setStyle(sf::Text::Bold);
+    sf::FloatRect vlBounds = valLevel.getLocalBounds();
+    valLevel.setPosition(SCREEN_WIDTH / 2.f + boxW / 2.f - vlBounds.width - 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 75.f);
+    m_window.draw(valLevel);
+
+    // Lines Label & Value
+    sf::Text labelLines;
+    labelLines.setFont(m_font);
+    labelLines.setCharacterSize(14);
+    labelLines.setFillColor(sf::Color(180, 180, 180));
+    labelLines.setString("Lines Cleared:");
+    labelLines.setPosition(SCREEN_WIDTH / 2.f - boxW / 2.f + 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 105.f);
+    m_window.draw(labelLines);
+
+    sf::Text valLines;
+    valLines.setFont(m_font);
+    valLines.setCharacterSize(14);
+    valLines.setFillColor(sf::Color(50, 255, 50)); // Neon Green
+    valLines.setString(std::to_string(m_board.getLinesCleared()));
+    valLines.setStyle(sf::Text::Bold);
+    sf::FloatRect vlnBounds = valLines.getLocalBounds();
+    valLines.setPosition(SCREEN_WIDTH / 2.f + boxW / 2.f - vlnBounds.width - 25.f, SCREEN_HEIGHT / 2.f - boxH / 2.f + 105.f);
+    m_window.draw(valLines);
+
+    // 6. Dynamic Pulsing retry prompt
     sf::Text prompt;
     prompt.setFont(m_font);
     prompt.setCharacterSize(14);
-    prompt.setFillColor(sf::Color(150, 150, 200));
+    float alpha = 127.f + 127.f * std::sin(m_pulseTimer * 4.f);
+    prompt.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
     prompt.setString("PRESS ANY KEY TO RETRY");
+    prompt.setStyle(sf::Text::Bold);
     
     sf::FloatRect promptBounds = prompt.getLocalBounds();
     prompt.setOrigin(promptBounds.left + promptBounds.width / 2.0f, promptBounds.top + promptBounds.height / 2.0f);
-    prompt.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT * 2.f / 3.f);
-
-    m_window.draw(goText);
-    m_window.draw(statsText);
+    prompt.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT * 2.f / 3.f + 30.f);
     m_window.draw(prompt);
 }

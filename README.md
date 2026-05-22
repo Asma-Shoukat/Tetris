@@ -25,7 +25,7 @@ Here are three designated spaces to showcase the game's visuals. You can add pic
         <strong>1. Start & Title Screen</strong><br/><br/>
         <!-- SCREENSHOT PLACEHOLDER 1 -->
         <a href="#1-start--title-screen">
-          <img src="https://images.placeholders.dev/?width=300&height=360&text=Start+Screen+Screenshot&bgColor=%23121220&textColor=%2300dede" width="220" alt="Start Screen"/>
+          <img src="screenshots/start_screen.png" width="220" alt="Start Screen"/>
         </a><br/><br/>
         <sub>Vibrant hue-cycling title and drifting background shapes.</sub>
       </td>
@@ -33,7 +33,7 @@ Here are three designated spaces to showcase the game's visuals. You can add pic
         <strong>2. Active Gameplay</strong><br/><br/>
         <!-- SCREENSHOT PLACEHOLDER 2 -->
         <a href="#2-active-gameplay">
-          <img src="https://images.placeholders.dev/?width=300&height=360&text=Active+Gameplay+Screenshot&bgColor=%23121220&textColor=%23f03232" width="220" alt="Active Gameplay"/>
+          <img src="screenshots/gameplay.png" width="220" alt="Active Gameplay"/>
         </a><br/><br/>
         <sub>Sleek dark grid playfield, dropping block, and translucent landing shadow.</sub>
       </td>
@@ -41,7 +41,7 @@ Here are three designated spaces to showcase the game's visuals. You can add pic
         <strong>3. Next & Hold Sidebar</strong><br/><br/>
         <!-- SCREENSHOT PLACEHOLDER 3 -->
         <a href="#3-next--hold-sidebar">
-          <img src="https://images.placeholders.dev/?width=300&height=360&text=HUD+Sidebar+Screenshot&bgColor=%23121220&textColor=%23f0b400" width="220" alt="Next & Hold Sidebar"/>
+          <img src="screenshots/hud_sidebar.png" width="220" alt="Next & Hold Sidebar"/>
         </a><br/><br/>
         <sub>Interactive HUD showing hold slot, centered next preview, and stats.</sub>
       </td>
