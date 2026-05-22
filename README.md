@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++"/>
-  <img src="https://img.shields.io/badge/SFML-2.6.2-8CC445?style=for-the-badge&logo=sfml&logoColor=white" alt="SFML"/>
+  <img src="   <img width="517" height="593" alt="image" src="https://github.com/user-attachments/assets/0972b0a8-4b96-4477-a71e-2b0ca60cabef" />
+  <img src="<img width="510" height="599" alt="image" src="https://github.com/user-attachments/assets/8b4c12f3-8591-4e41-9ac0-c4e0fc80a568" />
+
   <img src="https://img.shields.io/badge/Visual_Studio-2022-5C2D91?style=for-the-badge&logo=visual%20studio&logoColor=white" alt="Visual Studio 2022"/>
   <img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"/>
 </p>
