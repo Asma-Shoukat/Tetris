@@ -67,7 +67,8 @@ void Game::handleInput() {
 
         // 1. Key inputs for START SCREEN
         if (m_gameState == GameState::StartScreen) {
-            if (event.type == sf::Event::KeyPressed) {
+            if (event.type == sf::Event::KeyPressed && 
+                (event.key.code == sf::Keyboard::Enter || event.key.code == sf::Keyboard::Return)) {
                 m_board.reset();
                 m_holdType = PieceType::None;
                 m_hasHeldThisTurn = false;
@@ -798,7 +799,7 @@ void Game::drawStartScreen() {
     prompt.setCharacterSize(13);
     float alpha = 127.f + 127.f * std::sin(m_pulseTimer * 4.f);
     prompt.setFillColor(sf::Color(0, 255, 255, static_cast<sf::Uint8>(alpha))); // Neon cyan text
-    prompt.setString("PRESS ANY KEY TO START");
+    prompt.setString("PRESS ENTER TO START");
     prompt.setStyle(sf::Text::Bold);
     
     sf::FloatRect promptBounds = prompt.getLocalBounds();
