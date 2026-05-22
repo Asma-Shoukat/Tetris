@@ -1,12 +1,14 @@
 <p align="center">
-  <img src="   <img width="517" height="593" alt="image" src="https://github.com/user-attachments/assets/0972b0a8-4b96-4477-a71e-2b0ca60cabef" />
-  <img src="<img width="510" height="599" alt="image" src="https://github.com/user-attachments/assets/8b4c12f3-8591-4e41-9ac0-c4e0fc80a568" />
+  <img width="517" height="593" alt="image" src="https://github.com/user-attachments/assets/0972b0a8-4b96-4477-a71e-2b0ca60cabef" />
+
+  <img width="510" height="599" alt="izzzmage" src="https://github.com/user-attachments/assets/8b4c12f3-8591-4e41-9ac0-c4e0fc80a568" />
 
   <img src="https://img.shields.io/badge/Visual_Studio-2022-5C2D91?style=for-the-badge&logo=visual%20studio&logoColor=white" alt="Visual Studio 2022"/>
+
   <img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"/>
 </p>
 
-<h1 align="center">🎮 Tetris — Classic Arcade Reimagined in C++</h1>
+<h1 align="center">🎮 Tetris — Classic Arcade in C++</h1>
 
 <p align="center">
   A highly-polished, feature-rich <strong>Tetris Arcade Clone</strong> rebuilt with modular, object-oriented <strong>C++17</strong> and rendered using the <strong>SFML 2.6.2</strong> graphics & audio engine.<br/>
@@ -24,7 +26,8 @@ Here are three designated spaces to showcase the game's visuals. You can add pic
     <tr>
       <td align="center" width="33%">
         <strong>1. Start & Title Screen</strong><br/><br/>
-        <!-- SCREENSHOT PLACEHOLDER 1 -->
+        <img width="517" height="593" alt="image" src="https://github.com/user-attachments/assets/e6c21bb9-b73d-46bd-a7ba-d138f306bc7c" />
+
         <a href="#1-start--title-screen">
           <img src="screenshots/start_screen.png" width="220" alt="Start Screen"/>
         </a><br/><br/>
@@ -32,7 +35,8 @@ Here are three designated spaces to showcase the game's visuals. You can add pic
       </td>
       <td align="center" width="33%">
         <strong>2. Active Gameplay</strong><br/><br/>
-        <!-- SCREENSHOT PLACEHOLDER 2 -->
+        <img width="519" height="599" alt="image" src="https://github.com/user-attachments/assets/ed1d71f3-c2c8-4864-8602-3b0cd4669381" />
+
         <a href="#2-active-gameplay">
           <img src="screenshots/gameplay.png" width="220" alt="Active Gameplay"/>
         </a><br/><br/>
