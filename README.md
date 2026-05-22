@@ -32,25 +32,25 @@
 
 ## ✨ Advanced Features
 
- **Modern Object-Oriented C++ Architecture**
- **Ambient Background Animations**
- **Pulsing Neon Title Screen**
- **Hold Piece System**
- **Next Piece Preview**
- **Hard Drop Mechanic**
- **Ghost Piece Shadow**
- **Dynamic Level Progression**
- **Loop Soundtrack (SFML Audio)**
+**Modern Object-Oriented C++ Architecture**  
+**Ambient Background Animations**  
+**Pulsing Neon Title Screen**  
+**Hold Piece System**  
+**Next Piece Preview**  
+**Hard Drop Mechanic**  
+**Ghost Piece Shadow**  
+**Dynamic Level Progression**  
+**Loop Soundtrack (SFML Audio)**
 
 ---
 
 ## 🕹️ Controls Guide
 
 | Key | Action |
-|---|---|
+|-----|--------|
 | ← → | Move piece |
-| ↑ | Rotate |
-| ↓ | Soft drop |
+| ↑   | Rotate |
+| ↓   | Soft drop |
 | Space | Hard drop |
 | C / LShift | Hold piece |
 | P / Esc | Pause |
@@ -59,30 +59,32 @@
 
 ## 🏗️ Architecture Design Pattern
 
-Game Entry
-   ↓
-Game Engine
-   ↓
-Playfield + Tetromino + Audio (SoundManager)
+Game Entry  
+↓  
+Game Engine  
+↓  
+Playfield  
+↓  
+Tetromino  
+↓  
+Audio (SoundManager)
+
+---
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
-* Visual Studio 2022  
-* SFML 2.6.2  
-* Windows 10/11  
+- Visual Studio 2022  
+- SFML 2.6.2  
+- Windows 10/11  
 
 ### Build & Run
-1. Open `.sln`
-2. Set x64 Debug/Release
-3. Press F5
+1. Open `.sln` file  
+2. Set x64 Debug / Release  
+3. Press F5  
 
 ---
 
 ## 👩‍💻 Developer
 
 **Asma Shoukat**
-
-</div>
-
----
